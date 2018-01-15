@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.mobws.system.dao.UserDao" >
+	<resultMap id="user" type="com.mobws.system.entity.User" >
+		<id column="userId" property="userId" />
+		<result column="username" property="username" />
+		<result column="loginname" property="loginname" />
+		<result column="password" property="password" />
+		<result column="eamil" property="eamil" />
+		<result column="sex" property="sex" />
+		<result column="birthday" property="birthday" />
+		<result column="intime" property="intime" />
+		<result column="nativeplace" property="nativeplace" />
+		<result column="recordschool" property="recordschool" />
+		<result column="createtime" property="createtime" />
+	</resultMap>
+
+	<select id="login" resultMap="user" parameterType="map">
+		select * from org_user where loginname=#{loginname} and password=#{password}
+	</select>
+
+	<select id="getUserList" parameterType="map" resultMap="user">
+		select 
+		org_user.* from 
+		org_user, userdepartment 
+		where org_user.userid = userdepartment.userid 
+		and userdepartment.departmentid=#{departmentid}
+		<if test="query!=null and ''!=query">
+		 and username like '%${query}%'
+		</if>
+		limit #{pagenum}, #{pagesize}
+	</select>
+	
+	<select id="totalPage" parameterType="map" resultType="int">
+		select 
+		count(org_user.*) from 
+		org_user, userdepartment 
+		where org_user.userid = userdepartment.userid 
+		and userdepartment.departmentid=#{departmentid}
+		<if test="query!=null and ''!=query">
+		 and username like '%${query}%'
+		</if>
+	</select>
+</mapper>

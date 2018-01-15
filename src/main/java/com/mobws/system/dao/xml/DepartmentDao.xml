@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.mobws.system.dao.DepartmentDao">
+	<resultMap id="department" type="com.mobws.system.entity.Department">
+		<id column="departmentId" property="departmentId" />
+		<result column="departmentname" property="departmentname"/>
+		<result column="departmenttel" property="departmenttel"/>
+		<result column="departmentdesc" property="departmentdesc"/>
+		<result column="mainmanager" property="mainmanager"/>
+		<result column="departmenttype" property="departmenttype"/>
+		<result column="parentId" property="parentId"/>
+	</resultMap>
+	
+	<sql id="TABLE_FIELD">
+		`DEPARTMENTID`, `DEPARTMENTNAME`, `DEPARTMENTTEL`, `DEPARTMENTDESC`, `MAINMANAGER`, `DEPARTMENTTYPE`, `PARENTID`
+	</sql>
+	
+	<insert id="addDepartment" parameterType="com.mobws.system.entity.Department">
+		insert into department(<include refid="TABLE_FIELD"/>) 
+		VALUES (#{departmentId},#{departmentname},#{departmenttel},#{departmentdesc},#{mainmanager},#{departmenttype},#{parentId});
+	</insert>
+	
+	<select id="queryAllDepartments" resultMap="department" >
+		select <include refid="TABLE_FIELD"/> from department 
+	</select>
+	
+	<select id="queryDepartment" parameterType="java.lang.String" resultMap="department" >
+		select <include refid="TABLE_FIELD"/> from department where departmentId = #{departmentId}
+	</select>
+	
+	<update id="updateDepartment" parameterType="com.mobws.system.entity.Department">
+		UPDATE department SET `DEPARTMENTNAME`=#{departmentname}, `DEPARTMENTTEL`=#{departmenttel}, `DEPARTMENTDESC`=#{departmentdesc} WHERE (`DEPARTMENTID`=#{departmentId});
+	</update>
+	
+	<select id="countDepartmentByParentId" parameterType="java.lang.String" resultType="int">
+		select count(*) from department where parentId=#{departmentId} 
+	</select>
+	
+	<select id="countUserForDepartment" parameterType="java.lang.String" resultType="int">
+		select count(*) from userdepartment where departmentId=#{departmentId}
+	</select>
+	
+	<delete id="deleteDepartment" parameterType="java.lang.String" >
+		delete from department where  departmentId=#{departmentId}
+	</delete>
+	
+	<update id="updateParentDepartment" parameterType="com.mobws.system.entity.Department">
+	    UPDATE department SET parentId=#{parentId}  WHERE departmentId=#{departmentId};
+	</update>
+	
+</mapper> 
